@@ -84,8 +84,19 @@ pick! {
     pub type c_double = f64;
   } else {
     pub use libc::{
-      c_char, c_double, c_float, c_int, c_long, c_longlong, c_short, c_uchar,
-      c_uint, c_ulong, c_ulonglong, c_ushort,
+      c_char,
+      c_schar,
+      c_uchar,
+      c_short,
+      c_ushort,
+      c_int,
+      c_uint,
+      c_long,
+      c_ulong,
+      c_longlong,
+      c_ulonglong,
+      c_float,
+      c_double,
     };
   }
 }
