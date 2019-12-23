@@ -12,6 +12,11 @@
 //! installed or you'll have to build the binary with a static linked CRT
 //! configured. Either of these options are silly if all that you want is some
 //! type declarations and you're not even calling any functions.
+//! 
+//! ### FAQ
+//! 
+//! * **Question:** Lokathor, aren't you just being totally crazy?
+//!   * Yes.
 
 /// Does all our conditional compilation selection.
 #[macro_export]
