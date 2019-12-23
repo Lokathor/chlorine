@@ -7,11 +7,11 @@
 //! * If you're on not-Windows it re-exports from `libc`.
 //!
 //! You might think "why not just always link to `libc`?", but on Windows that
-//! means that your resulting binary is less portable for no reason. The user's
-//! machine will need to have the visual studio redistributable installed for
-//! the program to run. Of you'll have to build the binary with a static CRT.
-//! Either of these options are pointless and silly if all that you want is some
-//! types and you're not even calling any functions.
+//! means that your resulting binary is less portable for no reason. Either the
+//! user's machine will need to have the visual studio redistributable DLL
+//! installed or you'll have to build the binary with a static linked CRT
+//! configured. Either of these options are silly if all that you want is some
+//! type declarations and you're not even calling any functions.
 
 /// Does all our conditional compilation selection.
 #[macro_export]
