@@ -1,0 +1,20 @@
+
+git:
+  quiet: true
+
+language: rust
+
+cache:
+  cargo
+
+rust:
+  - 1.31.0
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+
+script:
+  - cargo test

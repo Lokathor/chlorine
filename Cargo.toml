@@ -1,7 +1,10 @@
 [package]
 name = "chlorine"
 description = "Atomic 17!"
-version = "0.1.0"
+version = "0.0.4-alpha"
 authors = ["Lokathor <zefria@gmail.com>"]
 edition = "2018"
 license = "Zlib"
+
+[target."cfg(not(windows))".dependencies]
+libc = { version = "0.2", default-features = false }

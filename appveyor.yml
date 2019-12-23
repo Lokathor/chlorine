@@ -1,0 +1,27 @@
+
+os: Visual Studio 2015
+
+matrix:
+  fast_finish: true
+
+environment:
+  matrix:
+    # 32-bit MSVC
+    - channel: 1.31.0
+      target: i686-pc-windows-msvc
+    # 64-bit MSVC
+    - channel: 1.31.0
+      target: x86_64-pc-windows-msvc
+
+install:
+  # Setup Rust
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -y --default-toolchain %channel% --default-host %target%
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustc -vV
+  - cargo -vV
+
+build: false
+
+test_script:
+  - cargo test

@@ -1,6 +1,17 @@
 #![no_std]
+#![allow(non_camel_case_types)]
 
-//! Simple conditional compilation picker library.
+//! This just provides the numeric C types, for basic FFI purposes.
+//!
+//! * If you're on Windows it just gives the necessary aliases.
+//! * If you're on not-Windows it re-exports from `libc`.
+//!
+//! You might think "why not just always link to `libc`?", but on Windows that
+//! means that your resulting binary is less portable for no reason. The user's
+//! machine will need to have the visual studio redistributable installed for
+//! the program to run. Of you'll have to build the binary with a static CRT.
+//! Either of these options are pointless and silly if all that you want is some
+//! types and you're not even calling any functions.
 
 /// Does all our conditional compilation selection.
 #[macro_export]
@@ -40,8 +51,8 @@ macro_rules! pick {
   (@__forests [$($not:meta,)*]; [{$($m:meta),*} {$($tokens:tt)*}], $($rest:tt)*) => {
     // This "one weird trick" works because you can't apply a `cfg` to an
     // expression, only an item or a block, but a macro usage is an item, so
-    // we're configuring the macro usage, which will then contain a token tree
-    // that turns into either an item or an expression.
+    // we're configuring the macro usage, which (if configured in) will then
+    // contain a token tree that turns into either an item or an expression.
     #[cfg(all( $($m,)* not(any($($not),*)) ))]
     $crate::pick!{ @__identity $($tokens)* }
 
@@ -54,32 +65,27 @@ macro_rules! pick {
   };
 }
 
-/// Kiel [`pick`], sed en Esperanto. Nur por amuzo!
-#[macro_export]
-macro_rules! elekti {
-  // kun finiĝo "alie"
-  ($(se #[cfg($($test:meta),*)] {
-      $($if_tokens:tt)*
-    })alie+ alie {
-      $($else_tokens:tt)*
-    }) => {
-    $crate::pick!{
-      @__forests [ ] ;
-      $( [ {$($test),*} {$($if_tokens)*} ], )*
-      [ { } {$($else_tokens)*} ],
-    }
-  };
+pub use core::ffi::c_void;
 
-  // sen finiĝo "alie"
-  (se #[cfg($($if_meta:meta),*)] {
-      $($if_tokens:tt)*
-    } $(alie se #[cfg($($else_meta:meta),*)] {
-      $($else_tokens:tt)*
-    })*) => {
-    $crate::pick!{
-      @__forests [ ] ;
-      [ {$($if_meta),*} {$($if_tokens)*} ],
-      $( [ {$($else_meta),*} {$($else_tokens)*} ], )*
-    }
-  };
+pick! {
+  if #[cfg(windows)] {
+    pub type c_char = i8;
+    pub type c_schar = i8;
+    pub type c_uchar = u8;
+    pub type c_short = i16;
+    pub type c_ushort = u16;
+    pub type c_int = i32;
+    pub type c_uint = u32;
+    pub type c_long = i32;
+    pub type c_ulong = u32;
+    pub type c_longlong = i64;
+    pub type c_ulonglong = u64;
+    pub type c_float = f32;
+    pub type c_double = f64;
+  } else {
+    pub use libc::{
+      c_char, c_double, c_float, c_int, c_long, c_longlong, c_short, c_uchar,
+      c_uint, c_ulong, c_ulonglong, c_ushort,
+    };
+  }
 }
