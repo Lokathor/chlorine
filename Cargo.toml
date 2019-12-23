@@ -1,7 +1,7 @@
 [package]
 name = "chlorine"
 description = "Atomic 17!"
-version = "1.0.1-alpha.0"
+version = "1.0.1"
 authors = ["Lokathor <zefria@gmail.com>"]
 categories = ["no-std", "development-tools::ffi"]
 edition = "2018"
