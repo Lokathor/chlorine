@@ -3,8 +3,13 @@ name = "chlorine"
 description = "Atomic 17!"
 version = "1.0.1-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
+categories = ["no-std", "development-tools::ffi"]
 edition = "2018"
 license = "Zlib"
 
 [target."cfg(not(windows))".dependencies]
 libc = { version = "0.2", default-features = false }
+
+[badges]
+appveyor = { repository = "Lokathor/beryllium" }
+travis-ci = { repository = "Lokathor/beryllium" }
