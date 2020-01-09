@@ -88,9 +88,6 @@ pick! {
     pub type c_float = f32;
     pub type c_double = f64;
   } else {
-    #[no_link]
-    extern crate libc;
-    
     pub use libc::{
       c_char,
       c_schar,
