@@ -7,7 +7,7 @@ categories = ["no-std", "development-tools::ffi"]
 edition = "2018"
 license = "Zlib"
 
-[target."cfg(not(windows))".dependencies]
+[target.'cfg(not(any(windows, all(target_arch = "wasm32",not(any(target_env = "wasi", target_env = "emscripten"))))))'.dependencies]
 libc = { version = "0.2", default-features = false }
 
 [badges]
