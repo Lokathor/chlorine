@@ -5,11 +5,11 @@ version = "1.0.3-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
 categories = ["no-std", "development-tools::ffi"]
 edition = "2018"
-license = "Zlib"
+license = "Zlib OR Apache-2.0 OR MIT"
 
 [target.'cfg(not(any(windows, all(target_arch = "wasm32",not(any(target_env = "wasi", target_env = "emscripten"))))))'.dependencies]
 libc = { version = "0.2", default-features = false }
 
 [badges]
-appveyor = { repository = "Lokathor/beryllium" }
-travis-ci = { repository = "Lokathor/beryllium" }
+appveyor = { repository = "Lokathor/chlorine" }
+travis-ci = { repository = "Lokathor/chlorine" }
