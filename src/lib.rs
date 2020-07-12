@@ -3,29 +3,8 @@
 
 //! This just provides the numeric C types, for basic FFI purposes.
 //!
-//! * If you're on Windows it just gives the necessary aliases.
-//! * If you're on not-Windows it re-exports from `libc`.
-//!
-//! You might think "why not just always link to `libc`?", but on Windows that
-//! means that your resulting binary is just a little less portable for no
-//! reason. Either the user's machine will need to have the visual studio
-//! redistributable DLL installed or you'll have to build the binary with a
-//! static linked CRT configured. Either of these options are silly if all that
-//! you want is some type declarations and you're not even calling any
-//! functions.
-//!
-//! ### FAQ
-//!
-//! * **Question:** Lokathor, aren't you just being totally crazy?
-//!   * Yes.
-//! * **Question:** What do you do about `wasm32-unknown-unknown`? Unlike
-//!   `-wasi` and `-emscripten`, it has no `libc` support, so having "C types"
-//!   doesn't make any sense, right?
-//!   * Correct, there is no `libc`. In this situation, essentially no
-//!     definition is actually _wrong_, so all that matters is that _anything_
-//!     is provided. For simplicity sake, you get the same definitions as you
-//!     get on a `windows` target. If a `libc` is created in the future for that
-//!     target, the types will be adjusted to match if necessary.
+//! It's mostly for when you want to support `no_std` without also depending on
+//! `libc` or `winapi` (both of which add a few second to the clean build time).
 
 /// Does all our conditional compilation selection.
 #[macro_export]
@@ -79,44 +58,90 @@ macro_rules! pick {
   };
 }
 
-pub use core::ffi::c_void;
+pick! {
+  if #[cfg(any(target_pointer_width = "32", target_pointer_width = "64"))] {
+    // pass
+  } else {
+    compile_error!("This crate is probably wrong because it assumed your target didn't exist. Please file a PR with any updates it needs.")
+  }
+}
 
 pick! {
   if #[cfg(any(
-    windows,
     all(
-      target_arch = "wasm32",
-      not(any(target_env = "wasi", target_env = "emscripten"))
-    )
+      target_os = "linux",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "hexagon",
+        target_arch = "powerpc",
+        target_arch = "powerpc64",
+        target_arch = "s390x",
+        target_arch = "riscv64"
+      )
+    ),
+    all(
+      target_os = "android",
+      any(target_arch = "aarch64", target_arch = "arm")
+    ),
+    all(target_os = "l4re", target_arch = "x86_64"),
+    all(
+      target_os = "freebsd",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc",
+        target_arch = "powerpc64"
+      )
+    ),
+    all(
+      target_os = "netbsd",
+      any(target_arch = "aarch64", target_arch = "arm", target_arch = "powerpc")
+    ),
+    all(target_os = "openbsd", target_arch = "aarch64"),
+    all(
+      target_os = "vxworks",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc64",
+        target_arch = "powerpc"
+      )
+    ),
+    all(target_os = "fuchsia", target_arch = "aarch64")
   ))] {
-    pub type c_char = i8;
-    pub type c_schar = i8;
-    pub type c_uchar = u8;
-    pub type c_short = i16;
-    pub type c_ushort = u16;
-    pub type c_int = i32;
-    pub type c_uint = u32;
-    pub type c_long = i32;
-    pub type c_ulong = u32;
-    pub type c_longlong = i64;
-    pub type c_ulonglong = u64;
-    pub type c_float = f32;
-    pub type c_double = f64;
+    pub type c_char = u8;
   } else {
-    pub use libc::{
-      c_char,
-      c_schar,
-      c_uchar,
-      c_short,
-      c_ushort,
-      c_int,
-      c_uint,
-      c_long,
-      c_ulong,
-      c_longlong,
-      c_ulonglong,
-      c_float,
-      c_double,
-    };
+    pub type c_char = i8;
   }
 }
+
+pub type c_schar = i8;
+
+pub type c_uchar = u8;
+
+pub type c_short = i16;
+
+pub type c_ushort = u16;
+
+pub type c_int = i32;
+
+pub type c_uint = u32;
+
+pick! {
+  if #[cfg(any(windows, target_pointer_width = "32"))] {
+    pub type c_long = i32;
+    pub type c_ulong = u32;
+  } else {
+    pub type c_long = i64;
+    pub type c_ulong = u64;
+  }
+}
+
+pub type c_longlong = i64;
+
+pub type c_ulonglong = u64;
+
+pub type c_float = f32;
+
+pub type c_double = f64;
