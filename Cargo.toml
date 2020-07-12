@@ -1,6 +1,6 @@
 [package]
 name = "chlorine"
-description = "Just the C types for no_std, but builds faster."
+description = "Just the C types for `no_std`, but builds faster."
 version = "1.0.4-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
 edition = "2018"
