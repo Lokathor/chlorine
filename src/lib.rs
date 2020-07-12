@@ -66,6 +66,8 @@ pick! {
   }
 }
 
+pub use core::ffi::c_void;
+
 pick! {
   if #[cfg(any(
     all(
