@@ -3,10 +3,11 @@ name = "chlorine"
 description = "Just the C types for no_std, but builds faster."
 version = "1.0.4-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
-categories = ["no-std", "development-tools::ffi"]
 edition = "2018"
 license = "Zlib OR Apache-2.0 OR MIT"
 repository = "https://github.com/Lokathor/chlorine"
+keywords = ["ctypes", "no_std", "no-std"]
+categories = ["no-std", "development-tools::ffi"]
 
 [badges]
 appveyor = { repository = "Lokathor/chlorine" }
