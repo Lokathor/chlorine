@@ -7,4 +7,4 @@
 
 # chlorine
 
-Atomic 17!
+Just the C types for `no_std`, but builds faster.
