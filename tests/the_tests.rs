@@ -1,5 +1,8 @@
 use chlorine::*;
 
+#[allow(unused)]
+use chlorine::c_void;
+
 #[test]
 fn all_the_types_are_present() {
   let _: c_char = 0;
