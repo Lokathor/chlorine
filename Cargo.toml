@@ -1,6 +1,6 @@
 [package]
 name = "chlorine"
-description = "Atomic 17!"
+description = "Just the C types for no_std, but builds faster."
 version = "1.0.4-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
 categories = ["no-std", "development-tools::ffi"]
