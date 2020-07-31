@@ -158,16 +158,14 @@ pub type c_float = f32;
 
 pub type c_double = f64;
 
-pub type intmax_t = i64;
-
-pub type intptr_t = isize;
-
-pub type ptrdiff_t = isize;
-
-pub type size_t = usize;
-
-pub type ssize_t = isize;
-
-pub type uintmax_t = u64;
-
-pub type uintptr_t = usize;
+pick! {
+  if #[cfg(feature = "int_extras")] {
+    pub type intmax_t = i64;
+    pub type intptr_t = isize;
+    pub type ptrdiff_t = isize;
+    pub type size_t = usize;
+    pub type ssize_t = isize;
+    pub type uintmax_t = u64;
+    pub type uintptr_t = usize;
+  }
+}

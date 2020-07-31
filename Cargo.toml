@@ -9,6 +9,5 @@ repository = "https://github.com/Lokathor/chlorine"
 keywords = ["ctypes", "no_std", "no-std"]
 categories = ["no-std", "development-tools::ffi"]
 
-[badges]
-appveyor = { repository = "Lokathor/chlorine" }
-travis-ci = { repository = "Lokathor/chlorine" }
+[features]
+int_extras = []

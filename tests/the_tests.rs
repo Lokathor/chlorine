@@ -18,13 +18,18 @@ fn all_the_types_are_present() {
   let _: c_ulonglong = 0;
   let _: c_float = 0.0;
   let _: c_double = 0.0;
-  let _: intmax_t = 0;
-  let _: intptr_t = 0;
-  let _: ptrdiff_t = 0;
-  let _: size_t = 0;
-  let _: ssize_t = 0;
-  let _: uintmax_t = 0;
-  let _: uintptr_t = 0;
+
+  pick! {
+    if #[cfg(feature = "int_extras")] {
+      let _: intmax_t = 0;
+      let _: intptr_t = 0;
+      let _: ptrdiff_t = 0;
+      let _: size_t = 0;
+      let _: ssize_t = 0;
+      let _: uintmax_t = 0;
+      let _: uintptr_t = 0;
+    }
+  }
 }
 
 #[test]
