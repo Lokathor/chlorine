@@ -2,21 +2,26 @@ name: Rust
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
-
-env:
-  CARGO_TERM_COLOR: always
+    branches: [ main ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  build_test_no_features:
+    runs-on: [ubuntu-latest, windows-latest, mac-latest]
+    strategy:
+      matrix:
+        rust:
+        - { toolchain: 1.31.0 }
+        - { toolchain: stable }
+        - { toolchain: beta }
+        - { toolchain: nightly }
     steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: ${{ matrix.rust.toolchain }}
+    - uses: actions/checkout@v1
+    - uses: actions-rs/cargo@v1
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        command: test
