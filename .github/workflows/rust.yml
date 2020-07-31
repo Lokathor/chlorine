@@ -1,7 +1,7 @@
 name: Rust
 
 jobs:
-  build_test_no_features:
+  test:
     runs-on: [ubuntu-latest, windows-latest, mac-latest]
     strategy:
       matrix:
