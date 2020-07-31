@@ -8,20 +8,18 @@ on:
 
 jobs:
   test:
-    runs-on: [ubuntu-latest, windows-latest, mac-latest]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        rust:
-        - { toolchain: 1.31.0 }
-        - { toolchain: stable }
-        - { toolchain: beta }
-        - { toolchain: nightly }
+        os: [windows-latest, ubuntu-latest, mac-latest]
+        toolchain: [1.31.0, stable, beta, nightly]
     steps:
-    - uses: hecrj/setup-rust-action@v1
-      with:
-        rust-version: ${{ matrix.rust.toolchain }}
     - uses: actions/checkout@v1
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.toolchain }}
+        profile: minimal
     - uses: actions-rs/cargo@v1
       with:
-        toolchain: ${{ matrix.rust.toolchain }}
+        toolchain: ${{ matrix.toolchain }}
         command: test
