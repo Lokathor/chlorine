@@ -18,6 +18,13 @@ fn all_the_types_are_present() {
   let _: c_ulonglong = 0;
   let _: c_float = 0.0;
   let _: c_double = 0.0;
+  let _: intmax_t = 0;
+  let _: intptr_t = 0;
+  let _: ptrdiff_t = 0;
+  let _: size_t = 0;
+  let _: ssize_t = 0;
+  let _: uintmax_t = 0;
+  let _: uintptr_t = 0;
 }
 
 #[test]
@@ -61,4 +68,5 @@ fn all_the_types_match_std_os_raw() {
   let a: c_double = 0.0;
   let b: std::os::raw::c_double = 0.0;
   assert_eq!(a, b);
+  // the other types are not in std::os::raw
 }
