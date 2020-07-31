@@ -3,8 +3,7 @@
 
 //! This just provides the numeric C types, for basic FFI purposes.
 //!
-//! It's mostly for when you want to support `no_std` without also depending on
-//! `libc` or `winapi` (both of which add a few second to the clean build time).
+//! Also, that [`pick!`] macro is nifty.
 
 /// Does all our conditional compilation selection.
 #[macro_export]
@@ -58,63 +57,37 @@ macro_rules! pick {
   };
 }
 
-pick! {
-  if #[cfg(any(target_pointer_width = "32", target_pointer_width = "64"))] {
-    // pass
-  } else {
-    compile_error!("This crate is probably wrong because it assumed your target didn't exist. Please file a PR with any updates it needs.")
-  }
-}
-
 pub use core::ffi::c_void;
 
 pick! {
+  // c_char
   if #[cfg(any(
-    all(
-      target_os = "linux",
-      any(
-        target_arch = "aarch64",
-        target_arch = "arm",
-        target_arch = "hexagon",
-        target_arch = "powerpc",
-        target_arch = "powerpc64",
-        target_arch = "s390x",
-        target_arch = "riscv64"
-      )
-    ),
-    all(
-      target_os = "android",
-      any(target_arch = "aarch64", target_arch = "arm")
-    ),
-    all(target_os = "l4re", target_arch = "x86_64"),
-    all(
-      target_os = "freebsd",
-      any(
-        target_arch = "aarch64",
-        target_arch = "arm",
-        target_arch = "powerpc",
-        target_arch = "powerpc64"
-      )
-    ),
-    all(
-      target_os = "netbsd",
-      any(target_arch = "aarch64", target_arch = "arm", target_arch = "powerpc")
-    ),
-    all(target_os = "openbsd", target_arch = "aarch64"),
-    all(
-      target_os = "vxworks",
-      any(
-        target_arch = "aarch64",
-        target_arch = "arm",
-        target_arch = "powerpc64",
-        target_arch = "powerpc"
-      )
-    ),
-    all(target_os = "fuchsia", target_arch = "aarch64")
+    target_arch = "aarch64",
+    target_arch = "arm",
+    target_arch = "asmjs",
+    target_arch = "msp430",
+    target_arch = "powerpc",
+    target_arch = "powerpc64",
+    target_arch = "riscv32",
+    target_arch = "riscv64",
+    target_arch = "s390x",
+    target_arch = "wasm32",
+    target_arch = "wasm64",
   ))] {
-    pub type c_char = u8;
+    pub type c_char = c_uchar;
+  } else if #[cfg(any(
+    target_arch = "mips",
+    target_arch = "mips64",
+    target_arch = "nvptx",
+    target_arch = "nvptx64",
+    target_arch = "sparc64",
+    target_arch = "x86",
+    target_arch = "x86_64",
+    target_arch = "xtensa"
+  ))] {
+    pub type c_char = c_schar;
   } else {
-    pub type c_char = i8;
+    compile_error!("The format of c_char is unknown!");
   }
 }
 
@@ -126,17 +99,54 @@ pub type c_short = i16;
 
 pub type c_ushort = u16;
 
-pub type c_int = i32;
-
-pub type c_uint = u32;
+pick! {
+  // c_int / c_uint
+  if #[cfg(any(
+    target_arch = "aarch64",
+    target_arch = "arm",
+    target_arch = "asmjs",
+    target_arch = "wasm32",
+    target_arch = "wasm64",
+    target_arch = "powerpc",
+    target_arch = "powerpc64",
+    target_arch = "s390x",
+    target_arch = "riscv32",
+    target_arch = "riscv64",
+    target_arch = "mips",
+    target_arch = "mips64",
+    target_arch = "sparc64",
+    target_arch = "x86",
+    target_arch = "x86_64",
+    target_arch = "nvptx",
+    target_arch = "nvptx64",
+    target_arch = "xtensa",
+  ))] {
+    pub type c_int = i32;
+    pub type c_uint = u32;
+  } else if #[cfg(target_arch = "msp430")] {
+    pub type c_int = i16;
+    pub type c_uint = u16;
+  } else {
+    compile_error!("The format of c_int / c_uint is unknown!");
+  }
+}
 
 pick! {
-  if #[cfg(any(windows, target_pointer_width = "32"))] {
+  // c_long / c_ulong
+  if #[cfg(windows)] {
     pub type c_long = i32;
     pub type c_ulong = u32;
-  } else {
+  } else if #[cfg(any(target_os = "redox", target_os = "solaris"))] {
     pub type c_long = i64;
     pub type c_ulong = u64;
+  } else if #[cfg(any(target_pointer_width = "16", target_pointer_width = "32"))] {
+    pub type c_long = i32;
+    pub type c_ulong = u32;
+  } else if #[cfg(target_pointer_width = "64")] {
+    pub type c_long = i64;
+    pub type c_ulong = u64;
+  } else {
+    compile_error!("The format of c_long / c_ulong is unknown!");
   }
 }
 
@@ -147,3 +157,17 @@ pub type c_ulonglong = u64;
 pub type c_float = f32;
 
 pub type c_double = f64;
+
+pub type intmax_t = i64;
+
+pub type intptr_t = isize;
+
+pub type ptrdiff_t = isize;
+
+pub type size_t = usize;
+
+pub type ssize_t = isize;
+
+pub type uintmax_t = u64;
+
+pub type uintptr_t = usize;
