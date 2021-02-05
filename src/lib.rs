@@ -62,29 +62,94 @@ pub use core::ffi::c_void;
 pick! {
   // c_char
   if #[cfg(any(
-    target_arch = "aarch64",
-    target_arch = "arm",
-    target_arch = "asmjs",
-    target_arch = "msp430",
-    target_arch = "powerpc",
-    target_arch = "powerpc64",
-    target_arch = "riscv32",
-    target_arch = "riscv64",
-    target_arch = "s390x",
-    target_arch = "wasm32",
-    target_arch = "wasm64",
+    all(
+      target_os = "linux",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "hexagon",
+        target_arch = "powerpc",
+        target_arch = "powerpc64",
+        target_arch = "s390x",
+        target_arch = "riscv64",
+        target_arch = "riscv32"
+      )
+    ),
+    all(
+      target_os = "android",
+      any(target_arch = "aarch64", target_arch = "arm")
+    ),
+    all(target_os = "l4re", target_arch = "x86_64"),
+    all(
+      target_os = "freebsd",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc",
+        target_arch = "powerpc64"
+      )
+    ),
+    all(
+      target_os = "netbsd",
+      any(target_arch = "aarch64", target_arch = "arm", target_arch = "powerpc")
+    ),
+    all(target_os = "openbsd", target_arch = "aarch64"),
+    all(
+      target_os = "vxworks",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc64",
+        target_arch = "powerpc"
+      )
+    ),
+    all(target_os = "fuchsia", target_arch = "aarch64")
   ))] {
     pub type c_char = c_uchar;
-  } else if #[cfg(any(
-    target_arch = "mips",
-    target_arch = "mips64",
-    target_arch = "nvptx",
-    target_arch = "nvptx64",
-    target_arch = "sparc64",
-    target_arch = "x86",
-    target_arch = "x86_64",
-    target_arch = "xtensa"
-  ))] {
+  } else if #[cfg(not(any(
+    all(
+      target_os = "linux",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "hexagon",
+        target_arch = "powerpc",
+        target_arch = "powerpc64",
+        target_arch = "s390x",
+        target_arch = "riscv64",
+        target_arch = "riscv32"
+      )
+    ),
+    all(
+      target_os = "android",
+      any(target_arch = "aarch64", target_arch = "arm")
+    ),
+    all(target_os = "l4re", target_arch = "x86_64"),
+    all(
+      target_os = "freebsd",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc",
+        target_arch = "powerpc64"
+      )
+    ),
+    all(
+      target_os = "netbsd",
+      any(target_arch = "aarch64", target_arch = "arm", target_arch = "powerpc")
+    ),
+    all(target_os = "openbsd", target_arch = "aarch64"),
+    all(
+      target_os = "vxworks",
+      any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc64",
+        target_arch = "powerpc"
+      )
+    ),
+    all(target_os = "fuchsia", target_arch = "aarch64")
+  )))] {
     pub type c_char = c_schar;
   } else {
     compile_error!("The format of c_char is unknown!");
