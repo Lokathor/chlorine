@@ -89,12 +89,12 @@ pick! {
     target_arch = "aarch64",
     target_arch = "msp430",
   ))] {
-    // c_char is unsigned (unless macos)
+    // c_char is unsigned (unless using apple)
     pick! {
       if #[cfg(any(
         target_os = "macos",
         target_os = "ios",
-      )] {
+      ))] {
         pub type c_char = c_schar;
       } else {
         pub type c_char = c_uchar;
