@@ -91,7 +91,10 @@ pick! {
   ))] {
     // c_char is unsigned (unless macos)
     pick! {
-      if #[cfg(target_os = "macos")] {
+      if #[cfg(any(
+        target_os = "macos",
+        target_os = "ios",
+      )] {
         pub type c_char = c_schar;
       } else {
         pub type c_char = c_uchar;
