@@ -92,6 +92,7 @@ pick! {
       if #[cfg(any(
         target_os = "macos",
         target_os = "ios",
+        target_os = "windows",
       ))] {
         pub type c_char = c_schar;
       } else {
